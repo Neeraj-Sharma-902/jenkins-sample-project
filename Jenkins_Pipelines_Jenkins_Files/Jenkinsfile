@@ -11,8 +11,7 @@ pipeline {
                 script {
                     def gitRepoUrl = 'https://github.com/Neeraj-Sharma-902/jenkins-sample-project.git'
 
-                    checkout changelog: false
-                             poll: false,
+                    checkout poll: false,
                              scm: scmGit(branches: [[name: '*/master']],
                                          extensions: [cloneOption(depth: 1, noTags: false, reference: '', shallow: true),
                                                       cleanBeforeCheckout(deleteUntrackedNestedRepositories: true)],
