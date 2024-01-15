@@ -24,7 +24,7 @@ pipeline{
                 dir('./java-tomcat-sample'){
                     sh '''
                         echo "Executing Unit Tests"
-                        mv test
+                        mvn test
                     '''
                 }
             }
@@ -71,7 +71,7 @@ void packageApp(){
     sh """
         mvn versions:set -D newVersion=${RELEASE_SUFFIX}-SNAPSHOT
         mvn versions:update-child-modules
-        mv clean package
+        mvn clean package
     """
 }
 
