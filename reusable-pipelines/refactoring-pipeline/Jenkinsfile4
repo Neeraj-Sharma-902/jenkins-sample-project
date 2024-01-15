@@ -3,7 +3,7 @@ pipeline{
     agent any
 
     parameters{
-        booleanParam name: 'RELEASE' defaultValue: false description: 'Is this a Release candidate?'
+        booleanParam name: 'RELEASE', defaultValue: false, description: 'Is this a Release candidate?'
     }
 
     environment{
