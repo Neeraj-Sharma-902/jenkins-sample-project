@@ -1,0 +1,52 @@
+pipeline{
+
+    agent any
+
+    parameters{
+        booleanParam(name: 'RELEASE', defaultValue: false, description: 'Is this a release candidate?')
+    }
+
+    environment{
+        RELEASE_VERSION = '1.1.0'
+        INT_VERSION = 'R2'
+    }
+
+    stages{
+
+        stage('Audit Tools'){
+            steps{
+                sh '''
+                    git version
+                    java -version
+                    mvn -version
+                '''
+            }
+        }
+
+        stage('Unit Test'){
+            steps{
+                dir('./java-tomcat-sample'){
+                    sh '''
+                        echo "Executing Unit Tests"
+                        mvn test
+                    '''
+                }
+            }
+        }
+
+        stage('Build'){
+            environment{
+                VERSION_SUFFIX = "${sh(script: 'if [ "${RELEASE}" = false ]; then echo -n "${INT_VERSION}ci:${BUILD_NUMBER}"; else echo -n "${RELEASE_VERSION}ci:${BUILD_NUMBER}"; fi' , returnStdout: true)}"
+            }
+            steps{
+                dir('./java-tomcat-sample'){
+                    sh """
+                        mvn version:set -D newVersion = ${VERSION_SUFFIX}-SNAPSHOT
+                        mvn versions:update-child-modules
+                        mvn clean package
+                    """
+                }
+            }
+        }
+    }
+}
