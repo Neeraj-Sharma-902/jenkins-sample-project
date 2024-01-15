@@ -1,39 +1,44 @@
+/* groovylint-disable LineLength */
 pipeline {
     agent any
     environment {
-        RELEASE='20.04'
+        RELEASE = '20.0.04'
     }
+
     stages {
         stage('Build') {
             agent any
             environment {
-                LOG_LEVEL='INFO'
+                LOG_LEVEL = 'INFO'
             }
             steps {
-                echo "Building release ${RELEASE} with log level ${LOG_LEVEL}..."
+                echo "Building release ${RELEASE} with Log Level ${LOG_LEVEL}....."
             }
         }
+
         stage('Test') {
             steps {
-                echo "Testing release ${RELEASE}..."
+                echo "Testing release ${RELEASE}...."
             }
         }
+
         stage('Deploy') {
             input {
                 message 'Deploy?'
                 ok 'Do it!'
                 parameters {
-                    string(name: 'TARGET_ENVIRONMENT', defaultValue: 'PROD', description: 'Target deployment environment')
+                    string(name: 'TARGET_ENVIRONMENT', defaultValue: 'Prod', description: 'Target Deployment Environment')
                 }
             }
             steps {
                 echo "Deploying release ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
             }
-        }        
+        }
     }
-    post{
+
+    post {
         always {
-             echo 'Prints whether deploy happened or not, success or failure'
+            echo 'Print whether deploy is successful or not'
         }
     }
 }
