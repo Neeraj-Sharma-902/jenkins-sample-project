@@ -52,7 +52,9 @@ pipeline{
         stage('Publish'){
             steps{
                 when{
-                    expression ( return param.RELEASE)
+                    expression { 
+                        return params.RELEASE
+                    }
                 }
                 script{
                     archiveArtifacts artifacts: '**/*.war', 
