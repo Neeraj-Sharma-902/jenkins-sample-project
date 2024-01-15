@@ -1,0 +1,84 @@
+pipeline{
+
+    agent any
+
+    parameters{
+        booleanParam name: 'RELEASE' defaultValue: false description: 'Is this a Release candidate?'
+    }
+
+    environment{
+        RELEASE_VERSION = '1.1.0'
+        INT_VERSION = 'R2'
+    }
+
+    stages{
+
+        stage('Audit Tools'){
+            steps{
+                auditTools()
+            }
+        }
+
+        stage('Unit Test'){
+            steps{
+                dir(./java-tomcat-sample){
+                    sh '''
+                        echo "Executing Unit Tests"
+                        mv test
+                    '''
+                }
+            }
+        }
+
+        stage('Build'){
+            environment{
+                RELEASE_SUFFIX = getBuildVersion()
+            }
+            steps{
+                dir('./java-tomcat-sample'){
+                    packageApp()
+                }
+            }
+        }
+
+        stage('Publish'){
+            steps{
+                script{
+                    archiveArtifacts artifacts: '**/*.war', 
+                                     followSymlinks: false, 
+                                     onlyIfSuccessful: true
+                }
+            }
+        }
+    }
+
+    post{
+        always{
+            cleanWs()
+        }
+    }
+}
+
+String getBuildVersion(){
+    if(params.RELEASE){
+        return "${RELEASE_VERSION}:${BUILD_NUMBER}"
+    }else{
+        return "${INT_VERSION}:${BUILD_NUMBER}"
+    }
+}
+
+void packageApp(){
+    sh """
+        mvn versions:set -D newVersion=${RELEASE_SUFFIX}-SNAPSHOT
+        mvn versions:update-child-modules
+        mv clean package
+    """
+}
+
+void auditTools(){
+    sh '''
+        git version
+        java -version
+        mvn -version
+    '''
+}
