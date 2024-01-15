@@ -1,0 +1,44 @@
+pipeline{
+
+    agent any
+    environment{
+        VERSION = '1.0.0'
+        RELEASE_VERSION = 'R.2'
+    }
+
+    stages{
+
+        stage('Audit Tools'){
+            steps{
+                sh '''
+                    git version
+                    java -veresion
+                    mvn -version
+                '''
+            }
+        }
+
+        stage('Unit Tests'){
+            steps{
+                dir('./java-tomcat-sample'){
+                    sh '''
+                        echo "Executing Unit Tests......"
+                        mv test
+                    '''
+                }
+            }
+        }
+
+        stage('Build'){
+            steps{
+                dir('./jaba-tomcat-sample'){
+                    sh '''
+                        mvn versions:set -D newVersion=${VERSION}-SNAPSHOT
+                        mvn versions:update-child-modules
+                        mvn clean package
+                    '''
+                }
+            }
+        }
+    }
+}
