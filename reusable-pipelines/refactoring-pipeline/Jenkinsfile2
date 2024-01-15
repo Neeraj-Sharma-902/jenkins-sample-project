@@ -32,11 +32,11 @@ pipeline{
         stage('Build'){
             steps{
                 dir('./jaba-tomcat-sample'){
-                    sh '''
+                    sh """
                         mvn versions:set -D newVersion=${VERSION}-SNAPSHOT
                         mvn versions:update-child-modules
                         mvn clean package
-                    '''
+                    """
                 }
             }
         }
