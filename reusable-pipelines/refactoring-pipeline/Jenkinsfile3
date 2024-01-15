@@ -48,5 +48,15 @@ pipeline{
                 }
             }
         }
+
+        stage('Publish'){
+            steps{
+                script{
+                    archiveArtifacts artifacts: '**/*.war', 
+                                     followSymlinks: false, 
+                                     onlyIfSuccessful: true
+                }
+            }
+        }
     }
 }
