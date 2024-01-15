@@ -50,12 +50,12 @@ pipeline{
         }
 
         stage('Publish'){
-            steps{
-                when{
+            when{
                     expression { 
                         return params.RELEASE
                     }
                 }
+            steps{
                 script{
                     archiveArtifacts artifacts: '**/*.war', 
                                      followSymlinks: false, 
