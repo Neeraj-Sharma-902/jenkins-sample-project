@@ -34,7 +34,7 @@ pipeline {
             steps{
                 echo "Building version: ${VERSION} with suffix: ${RELEASE_VERSION}"
                 echo "Mention you application code here"
-                sh 'mvn -f "./java-tomcat-sample/pom.xml" clean package'
+                sh 'mvn -f "java-tomcat-sample/pom.xml" clean package'
             }
         }
     }
