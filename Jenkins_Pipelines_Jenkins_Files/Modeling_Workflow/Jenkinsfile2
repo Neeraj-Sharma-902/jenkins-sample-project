@@ -29,9 +29,9 @@ pipeline{
                              defaultValue: 'PROD', 
                              name: 'TARGET_ENVIRONMENT')
                         } 
+            }
             steps{
-                echo "Deploying release ${RELEASE} to ${TARGET_ENVIRONMENT}"
-                }
+                    echo "Deploying release ${RELEASE} to ${TARGET_ENVIRONMENT}"
             }
         }
     }
