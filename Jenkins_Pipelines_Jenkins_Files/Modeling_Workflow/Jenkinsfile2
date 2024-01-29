@@ -26,7 +26,6 @@ pipeline {
                 parameters {
                     choice(choices: ['DEV', 'UAT', 'PROD'],
                              description: 'Target Deployment Environment',
-                             defaultValue: 'PROD',
                              name: 'TARGET_ENVIRONMENT')
                 }
             }
