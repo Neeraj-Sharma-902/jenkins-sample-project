@@ -21,13 +21,14 @@ pipeline{
         }
         stage('Deploy'){
             input{
-                message: 'Deploy?', 
-                  ok: 'Do It!', 
-                  parameters: [choice(choices: ['DEV', 'UAT', 'PROD'], 
-                               description: 'Target Deployment Environment', 
-                               defaultValue: 'PROD', 
-                               name: 'TARGET_ENVIRONMENT')]
-            } 
+                message: 'Deploy?' 
+                ok: 'Do It!'
+                parameters{
+                    choice(choices: ['DEV', 'UAT', 'PROD'], 
+                             description: 'Target Deployment Environment', 
+                             defaultValue: 'PROD', 
+                             name: 'TARGET_ENVIRONMENT')
+                } 
             steps{
                 echo "Deploying release ${RELEASE} to ${TARGET_ENVIRONMENT}"
             }
