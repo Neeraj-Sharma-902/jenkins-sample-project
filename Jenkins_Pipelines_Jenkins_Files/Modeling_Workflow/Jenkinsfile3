@@ -1,64 +1,59 @@
-pipeline{
+pipeline {
     agent any
-    environment{
-        RELEASE='20.0.04'
+    environment {
+        RELEASE = '20.0.4'
     }
 
-    stages{
-
-        stage('Build'){
-            environment{
-                LOG_LEVEL='INFO'
+    stages {
+        stage('Build') {
+            environment {
+                LOG_LEVEL = 'INFO'
             }
-
-            parallel{
-                stage('linux-arm64'){
+            parallel {
+                stage('linux-arm64') {
                     agent any
-                    steps{
-                        echo "Building release ${RELEASE} for stage ${STAGE_NAME} with log level ${LOG_LEVEL}"
-                        sh 'sleep 10'
+                    steps {
+                        echo "Build release ${RELEASE} for stage ${STAGE_NAME} with log level ${LOG_LEVEL}"
                     }
                 }
-                stage('linux-amd64'){
+                stage('linux-amd64') {
                     agent any
-                    steps{
-                        echo "Building release ${RELEASE} for stage ${STAGE_NAME} with log level ${LOG_LEVEL}"
-                        sh 'sleep 20'
+                    steps {
+                        echo "Build release ${RELEASE} for stage ${STAGE_NAME} with log level ${LOG_LEVEL}"
                     }
                 }
-                stage('windows'){
+                stage('windows-amd64') {
                     agent any
-                    steps{
-                        echo "Building release ${RELEASE} for stage ${STAGE_NAME} with log level ${LOG_LEVEL}"
-                        sh 'sleep 30'
+                    steps {
+                        echo "Build release ${RELEASE} for stage ${STAGE_NAME} with log level ${LOG_LEVEL}"
                     }
                 }
             }
         }
-
         stage('Test'){
             steps{
-                echo "testing release ${RELEASE}"
-            }           
+                echo "Testing release ${RELEASE}...."
+            }
         }
-
         stage('Deploy'){
-            input{
+            input {
                 message 'Deploy?'
-                ok 'Do it!'
-                parameters{
-                    string(name: 'TARGET_ENVIRONMENT',defaultValue: 'prod',description: 'Target Deployment Environment')
+                ok 'Do It!!'
+                parameters {
+                    choice(choices: ['DEV','UAT','PROD'],
+                           description: 'Taget Deployment Environment'),
+                           name: 'TARGET_ENVIRONMENT'
                 }
             }
-            steps{
-                echo "Depoying release ${RELEASE} in environment ${TARGET_ENVIRONMENT}"
+            steps {
+                echo "Deploying release ${RELEASE} to ${TARGET_ENVIRONMENT}"
             }
         }
     }
 
-    post{
-        always{
-            echo "Print whether Deployment is successfull or not"
+    post {
+        always {
+            echo "This block will execute irrespective of build status"
         }
     }
 }
