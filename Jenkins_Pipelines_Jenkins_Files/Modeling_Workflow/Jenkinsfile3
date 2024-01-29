@@ -41,8 +41,8 @@ pipeline {
                 ok 'Do It!!'
                 parameters {
                     choice(choices: ['DEV','UAT','PROD'],
-                           description: 'Taget Deployment Environment'),
-                           name: 'TARGET_ENVIRONMENT'
+                           description: 'Taget Deployment Environment',
+                           name: 'TARGET_ENVIRONMENT')
                 }
             }
             steps {
