@@ -1,44 +1,40 @@
-/* groovylint-disable LineLength */
-pipeline {
+pipeline{
     agent any
-    environment {
-        RELEASE = '20.0.04'
+    environment{
+        RELEASE = '20.04'
     }
 
-    stages {
-        stage('Build') {
+    stages{
+        stage('Build'){
             agent any
-            environment {
+            environment{
                 LOG_LEVEL = 'INFO'
             }
-            steps {
-                echo "Building release ${RELEASE} with Log Level ${LOG_LEVEL}....."
+            steps{
+                echo "Building release ${RELEASE} with log level ${LOG_LEVEL}"
             }
         }
-
-        stage('Test') {
-            steps {
-                echo "Testing release ${RELEASE}...."
+        stage('Test'){
+            steps{
+                echo "Testing release ${RELEASE}....."
             }
         }
-
-        stage('Deploy') {
-            input {
-                message 'Deploy?'
-                ok 'Do it!'
-                parameters {
-                    string(name: 'TARGET_ENVIRONMENT', defaultValue: 'Prod', description: 'Target Deployment Environment')
-                }
-            }
-            steps {
-                echo "Deploying release ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
+        stage('Deploy'){
+            input message: 'Deploy?', 
+                  ok: 'Do It!', 
+                  parameters: [choice(choices: ['DEV', 'UAT', 'PROD'], 
+                               description: 'Target Deployment Environment', 
+                               defaultValue: 'PROD', 
+                               name: 'TARGET_ENVIRONMENT')]
+            steps{
+                echo "Deploying release ${RELEASE} to ${TARGET_ENVIRONMENT}"
             }
         }
     }
 
-    post {
-        always {
-            echo 'Print whether deploy is successful or not'
+    post{
+        always{
+            echo "This post block runs always irrespective of job status"
         }
     }
 }
