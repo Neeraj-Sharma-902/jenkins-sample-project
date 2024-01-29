@@ -26,7 +26,7 @@ pipeline{
             steps{
                 sh '''
                     ls
-                    echo 'in Build step
+                    echo 'In Build step'
                 '''
             }
         }
