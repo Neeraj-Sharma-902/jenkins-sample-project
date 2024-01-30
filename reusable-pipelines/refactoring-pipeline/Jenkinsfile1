@@ -39,7 +39,7 @@ pipeline{
 
     post{
         success{
-            archiveArtifacts artifacts: 'java-tomcat-sample/target/*.jar', followSymlinks: false
+            archiveArtifacts artifacts: 'java-tomcat-sample/target/*.war', followSymlinks: false
         }
     }
 }
